@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
+
+  <!-- Reload page every 5 minutes. -->
+  <meta http-equiv="refresh" content="300" />
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+  <title>Status Feed</title>
+</head>
+
+<body>
+  <div class="container">
+    <h3 class="blue-text">Status Feed</h3>
+    <p>Exibe e atualiza o feed RSS do site <strong>status.sendgrid.com</strong></p>
+    <a class="waves-effect blue waves-light btn " type="submit" onClick="refreshPage()">ATUALIZAR</a>
+    <a class="waves-effect blue waves-light btn " onclick="darkMode()" title="Modo escuro">On/Off<i
+        class="material-icons right">brightness_4</i></a>
+    <br><br>
+
+    <script>
+      const RSS_URL = `https://status.sendgrid.com/history.rss`;
+
+      fetch(RSS_URL)
+        .then(response => response.text())
+        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+        .then(data => {
+          console.log(data);
+          const items = data.querySelectorAll("item");
+          let html = ``;
+          items.forEach(el => {
+            html += `<div class="container">
+                  <h5>
+                    <a href="${el.querySelector("link").innerHTML}" target="_blank" rel="noopener">
+                      ${el.querySelector("title").innerHTML} <br>
+                      ${el.querySelector("pubDate").innerHTML} <br><br>
+                    </a>
+                  </h5>
+                </div>
+              `;
+          });
+          document.body.insertAdjacentHTML("beforeend", html);
+        });
+
+    </script>
+
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.js"></script>
+  </div>
+</body>
+
+</html>
